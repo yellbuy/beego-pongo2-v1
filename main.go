@@ -19,9 +19,10 @@ import (
 	p2 "gopkg.in/flosch/pongo2.v3"
 )
 
-const (
-	templateDir = "templates"
-)
+// const (
+// 	templateDir = "templates"
+// )
+var templateDir = beego.BConfig.WebConfig.ViewsPath
 
 type Context map[string]interface{}
 
