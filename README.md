@@ -1,7 +1,9 @@
 # beego-pongo2 v3 version
 
 go get -u github.com/astaxie/beego
+
 go get -u gopkg.in/flosch/pongo2.v3
+
 go get -u github.com/yansuan/beego-pongo2
 
 Latest stable release: v3.0 (go get -u gopkg.in/flosch/pongo2.v3 / v3-branch)
