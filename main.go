@@ -19,9 +19,10 @@ import (
 	p2 "gopkg.in/flosch/pongo2.v3"
 )
 
- const (
- 	templateDir = "templates"
- )
+const (
+	templateDir = "templates"
+)
+
 //var templateDir = beego.BConfig.WebConfig.ViewsPath
 
 type Context map[string]interface{}
@@ -107,5 +108,6 @@ func readFlash(ctx *context.Context) map[string]string {
 
 func init() {
 	devMode = beego.AppConfig.String("runmode") == "dev"
+	p2.DefaultSet.Debug = devMode
 	beego.BConfig.WebConfig.AutoRender = false
 }
