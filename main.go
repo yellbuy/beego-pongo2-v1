@@ -16,7 +16,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
-	p2 "github.com/yansuan/pongo2"
+	p2 "gopkg.in/yansuan/pongo2.v3"
 )
 
 const (
