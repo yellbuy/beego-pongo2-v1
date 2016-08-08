@@ -106,6 +106,10 @@ func readFlash(ctx *context.Context) map[string]string {
 	return data
 }
 
+func SetHtmlEncryptKey(key []byte) {
+	p2.DefaultSet.HtmlEncryptKey = key
+}
+
 func init() {
 	devMode = beego.AppConfig.String("runmode") == "dev"
 	p2.DefaultSet.Debug = devMode
