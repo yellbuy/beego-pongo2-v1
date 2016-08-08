@@ -4,7 +4,7 @@ import (
 	"bytes"
 
 	"github.com/astaxie/beego"
-	p2 "gopkg.in/yansuan/pongo2.v3"
+	p2 "github.com/yansuan/pongo2"
 )
 
 type tagURLForNode struct {

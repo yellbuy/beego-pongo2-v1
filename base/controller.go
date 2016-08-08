@@ -2,7 +2,7 @@ package base
 
 import (
 	"github.com/astaxie/beego"
-	renderer "gopkg.in/yansuan/pongo2.v3"
+	renderer "github.com/yansuan/pongo2"
 )
 
 type BaseController struct {
