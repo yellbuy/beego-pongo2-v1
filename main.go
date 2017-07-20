@@ -17,6 +17,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	p2 "github.com/yansuan/pongo2"
+	"github.com/elazarl/go-bindata-assetfs"
 )
 
 const (
@@ -106,8 +107,12 @@ func readFlash(ctx *context.Context) map[string]string {
 	return data
 }
 
-func SetHtmlEncryptKey(key []byte) {
-	p2.DefaultSet.HtmlEncryptKey = key
+//func SetHtmlEncryptKey(key []byte) {
+//	p2.DefaultSet.HtmlEncryptKey = key
+//}
+
+func SetAssetFS(fs *assetfs.AssetFS) {
+	p2.DefaultSet.AssetFS = fs
 }
 
 func init() {
