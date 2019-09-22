@@ -16,8 +16,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
-	p2 "github.com/yansuan/pongo2"
-	"github.com/elazarl/go-bindata-assetfs"
+	p2 "github.com/flosch/pongo2"
 )
 
 const (
@@ -111,9 +110,6 @@ func readFlash(ctx *context.Context) map[string]string {
 //	p2.DefaultSet.HtmlEncryptKey = key
 //}
 
-func SetAssetFS(fs *assetfs.AssetFS) {
-	p2.DefaultSet.AssetFS = fs
-}
 
 func init() {
 	devMode = beego.AppConfig.String("runmode") == "dev"
