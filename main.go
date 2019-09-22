@@ -8,7 +8,9 @@
 package pongo2
 
 import (
+	"fmt"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 
@@ -27,6 +29,7 @@ const (
 
 type Context map[string]interface{}
 
+var fileModifyTime = make(map[string]int64)
 var templates = map[string]*p2.Template{}
 var mutex = &sync.RWMutex{}
 
@@ -38,7 +41,25 @@ var devMode bool
 // Templates are looked up in `templates/` instead of Beego's default `views/` so that
 // Beego doesn't attempt to load and parse our templates with `html/template`.
 func Render(beegoCtx *context.Context, tmpl string, ctx Context) error {
-	template, err := p2.FromCache(path.Join(templateDir, tmpl))
+	tmpl = path.Join(templateDir, tmpl)
+	if !devMode {
+		//获取文件修改时间
+		curModifyTime := getFileModTime(tmpl)
+		if curModifyTime > 0 {
+			// 文件有效，需比对文件修改时间
+			mutex.RLock()
+			modifyTime, ok := fileModifyTime[tmpl]
+			if !ok || modifyTime != curModifyTime {
+				fileModifyTime[tmpl] = curModifyTime
+				//时间匹配不上，清除缓存，以便重新加载
+				p2.DefaultSet.CleanCache(tmpl)
+				//fmt.Println("缓存失效")
+			}
+			mutex.RUnlock()
+		}
+	}
+
+	template, err := p2.FromCache(tmpl)
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +88,24 @@ func Render(beegoCtx *context.Context, tmpl string, ctx Context) error {
 
 // Same as Render() but returns a string
 func RenderString(tmpl string, ctx Context) (string, error) {
-	template, err := p2.FromCache(path.Join(templateDir, tmpl))
+	tmpl = path.Join(templateDir, tmpl)
+	if !devMode {
+		//获取文件修改时间
+		curModifyTime := getFileModTime(tmpl)
+		if curModifyTime > 0 {
+			// 文件有效
+			mutex.RLock()
+			modifyTime, ok := fileModifyTime[tmpl]
+			if !ok || modifyTime != curModifyTime {
+				fileModifyTime[tmpl] = curModifyTime
+				//时间匹配不上，清除缓存，以便重新加载
+				p2.DefaultSet.CleanCache(tmpl)
+			}
+			mutex.RUnlock()
+		}
+	}
+
+	template, err := p2.FromCache(tmpl)
 	if err != nil {
 		panic(err)
 	}
@@ -109,7 +147,23 @@ func readFlash(ctx *context.Context) map[string]string {
 //func SetHtmlEncryptKey(key []byte) {
 //	p2.DefaultSet.HtmlEncryptKey = key
 //}
+// 获取文件修改时间
+func getFileModTime(path string) int64 {
+	f, err := os.Open(path)
+	if err != nil {
+		fmt.Println("open file error")
+		return 0
+	}
+	defer f.Close()
 
+	fi, err := f.Stat()
+	if err != nil {
+		fmt.Println("stat fileinfo error")
+		return 0
+	}
+
+	return fi.ModTime().UnixNano()
+}
 
 func init() {
 	devMode = beego.AppConfig.String("runmode") == "dev"
