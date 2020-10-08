@@ -2,7 +2,7 @@ package base
 
 import (
 	"github.com/astaxie/beego"
-	renderer "github.com/yansuan/pongo2"
+	renderer "github.com/flosch/pongo2"
 )
 
 type BaseController struct {
@@ -10,11 +10,11 @@ type BaseController struct {
 }
 
 func (this *BaseController) Template(tplName string, tplData renderer.Context) error {
-	return renderer.Render(this.Ctx, "", tplName, tplData)
+	return renderer.Render(this.Ctx, tplName, tplData)
 }
 
 func (this *BaseController) TemplateToString(tplName string, tplData renderer.Context) string {
-	toReturn, err := renderer.RenderString("", tplName, tplData)
+	toReturn, err := renderer.RenderString(tplName, tplData)
 	if err != nil {
 		panic(err)
 	}
