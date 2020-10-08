@@ -1,15 +1,16 @@
-# beego-pongo2 v3 version
+# beego-pongo2 v4 version
 
 ##download and install
 go get -u github.com/astaxie/beego
 
-go get -u gopkg.in/flosch/pongo2.v3
+go get -u gopkg.in/flosch/pongo2.v4
 
-go get -u github.com/yansuan/beego-pongo2
+go get -u github.com/flosch/beego-pongo2
 
-#####Latest stable release: v3.0 (go get -u gopkg.in/flosch/pongo2.v3 / v3-branch)
+#####Latest stable release: v4.0 (go get -u gopkg.in/flosch/pongo2.v4 / v4-branch)
 
 ##code
+
 ```go
 package controllers
 
