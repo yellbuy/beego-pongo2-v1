@@ -22,7 +22,10 @@ import (
 )
 
 const (
+	// 默认模板路径
 	templateDir = "templates"
+	// 插件模板路径
+	pluginDir = "plugins"
 )
 
 //var templateDir = beego.BConfig.WebConfig.ViewsPath
@@ -40,11 +43,19 @@ var devMode bool
 //
 // Templates are looked up in `templates/` instead of Beego's default `views/` so that
 // Beego doesn't attempt to load and parse our templates with `html/template`.
-func Render(beegoCtx *context.Context, tmpl string, ctx Context) error {
-	tmpl = path.Join(templateDir, tmpl)
+func Render(beegoCtx *context.Context, basePath, tmpl string, ctx Context) error {
+	var curModifyTime int64
+	//获取文件修改时间
+	if basePath != "" {
+		tmpl = path.Join(pluginDir, basePath, templateDir, tmpl)
+		curModifyTime = getFileModTime(tmpl)
+	}
+	if curModifyTime==0{
+		tmpl = path.Join(templateDir, tmpl)
+		curModifyTime = getFileModTime(tmpl)
+	}
+
 	if !devMode {
-		//获取文件修改时间
-		curModifyTime := getFileModTime(tmpl)
 		if curModifyTime > 0 {
 			// 文件有效，需比对文件修改时间
 			mutex.RLock()
@@ -85,13 +96,31 @@ func Render(beegoCtx *context.Context, tmpl string, ctx Context) error {
 
 	return template.ExecuteWriter(pCtx, beegoCtx.ResponseWriter)
 }
+// func pathExists(path string) bool {
+// 	_, err := os.Stat(path)
+// 	if err == nil {
+// 		return true
+// 	}
+// 	if os.IsNotExist(err) {
+// 		return false
+// 	}
+// 	fmt.Println(err)
+// 	return false
+// }
 
 // Same as Render() but returns a string
-func RenderString(tmpl string, ctx Context) (string, error) {
-	tmpl = path.Join(templateDir, tmpl)
+func RenderString(basePath, tmpl string, ctx Context) (string, error) {
+	var curModifyTime int64
+	//获取文件修改时间
+	if basePath != "" {
+		tmpl = path.Join(pluginDir, basePath, templateDir, tmpl)
+		curModifyTime = getFileModTime(tmpl)
+	}
+	if curModifyTime==0{
+		tmpl = path.Join(templateDir, tmpl)
+		curModifyTime = getFileModTime(tmpl)
+	}
 	if !devMode {
-		//获取文件修改时间
-		curModifyTime := getFileModTime(tmpl)
 		if curModifyTime > 0 {
 			// 文件有效
 			mutex.RLock()
