@@ -3,8 +3,9 @@ package pongo2
 import (
 	"bytes"
 
-	"github.com/astaxie/beego"
+	"github.com/beego/beego/v2/server/web"
 	p2 "github.com/yansuan/pongo2"
+
 )
 
 var xsrfTemplate = p2.Must(p2.FromString(`<input type="hidden" name="_xsrf" value="{{ _xsrf }}">`))
@@ -12,7 +13,7 @@ var xsrfTemplate = p2.Must(p2.FromString(`<input type="hidden" name="_xsrf" valu
 type tagXSRFTokenNode struct{}
 
 func (node *tagXSRFTokenNode) Execute(ctx *p2.ExecutionContext, buffer *bytes.Buffer) *p2.Error {
-	if !beego.BConfig.WebConfig.EnableXSRF {
+	if !web.BConfig.WebConfig.EnableXSRF {
 		return nil
 	}
 
