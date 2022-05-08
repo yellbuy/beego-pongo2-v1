@@ -15,10 +15,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/beego/v2/server/web/context"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	p2 "github.com/flosch/pongo2"
-
 )
 
 const (
@@ -82,7 +81,7 @@ func Render(beegoCtx *context.Context, basePath, tmpl string, ctx Context) error
 		pCtx = p2.Context(ctx)
 	}
 
-	if xsrf, ok := beegoCtx.GetSecureCookie(web.BConfig.WebConfig.XSRFKey, "_xsrf"); ok {
+	if xsrf, ok := beegoCtx.GetSecureCookie(beego.BConfig.WebConfig.XSRFKey, "_xsrf"); ok {
 		pCtx["_xsrf"] = xsrf
 	}
 
@@ -157,19 +156,19 @@ func RenderString(basePath, tmpl string, ctx Context) (string, error) {
 // (which only has a Data field anyway).
 func readFlash(ctx *context.Context) map[string]string {
 	data := map[string]string{}
-	if cookie, err := ctx.Request.Cookie(web.BConfig.WebConfig.FlashName); err == nil {
+	if cookie, err := ctx.Request.Cookie(beego.BConfig.WebConfig.FlashName); err == nil {
 		v, _ := url.QueryUnescape(cookie.Value)
 		vals := strings.Split(v, "\x00")
 		for _, v := range vals {
 			if len(v) > 0 {
-				kv := strings.Split(v, "\x23"+web.BConfig.WebConfig.FlashSeparator+"\x23")
+				kv := strings.Split(v, "\x23"+beego.BConfig.WebConfig.FlashSeparator+"\x23")
 				if len(kv) == 2 {
 					data[kv[0]] = kv[1]
 				}
 			}
 		}
 		// read one time then delete it
-		ctx.SetCookie(web.BConfig.WebConfig.FlashName, "", -1, "/")
+		ctx.SetCookie(beego.BConfig.WebConfig.FlashName, "", -1, "/")
 	}
 	return data
 }
@@ -196,7 +195,7 @@ func getFileModTime(path string) int64 {
 }
 
 func init() {
-	devMode = web.AppConfig.DefaultString("runmode", "prod") == "dev"
+	devMode = beego.AppConfig.DefaultString("runmode", "prod") == "dev"
 	p2.DefaultSet.Debug = devMode
-	web.BConfig.WebConfig.AutoRender = false
+	beego.BConfig.WebConfig.AutoRender = false
 }
