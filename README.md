@@ -5,7 +5,7 @@ go get -u github.com/astaxie/beego
 
 go get -u gopkg.in/flosch/pongo2.v4
 
-go get -u github.com/flosch/beego-pongo2
+go get -u github.com/flosch/beego-pongo2-v1
 
 #####Latest stable release: v4.0 (go get -u gopkg.in/flosch/pongo2.v4 / v4-branch)
 
