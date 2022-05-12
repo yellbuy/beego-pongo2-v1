@@ -3,9 +3,8 @@ package pongo2
 import (
 	"bytes"
 
-	"github.com/beego/beego/v2/server/web"
+	"github.com/astaxie/beego"
 	p2 "github.com/yansuan/pongo2"
-
 )
 
 type tagURLForNode struct {
@@ -21,13 +20,13 @@ func (node *tagURLForNode) Execute(ctx *p2.ExecutionContext, buffer *bytes.Buffe
 		}
 		args[i] = obj.String()
 	}
-    
-	params := make([]interface{}, len(args) - 1)
+
+	params := make([]interface{}, len(args)-1)
 	for i := range params {
-		params[i] = args[i + 1]
+		params[i] = args[i+1]
 	}
 
-	url := web.URLFor(args[0], params...)
+	url := beego.URLFor(args[0], params...)
 
 	buffer.WriteString(url)
 	return nil
